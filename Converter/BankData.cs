@@ -106,7 +106,8 @@ namespace Converter
 
                         CultureInfo cultureInfo = new CultureInfo("da-DK");
                         Decimal currencyRate = Convert.ToDecimal(fields[13], cultureInfo);
-                        Decimal kurtage = Convert.ToDecimal(fields[17], cultureInfo);
+                        // Remove negative kurtage, as all kurtage is negative
+                        Decimal kurtage = Convert.ToDecimal(fields[17].Replace('-', ' '), cultureInfo);
                         impRecord.setKurtage("-" + Math.Round(kurtage / currencyRate * 100, 2).ToString());
                         impRecord.setCurrenciesRate(fields[13]);
                         // take last 14 digits
