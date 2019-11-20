@@ -64,6 +64,8 @@ namespace Converter
                         impRecord.blankAmount();
                         impRecord.blankKurtage();
 
+                        impRecord.setCost("-" + fields[16]);
+
                         impRecord.setStatus('N');
 
                         impRecord.setCurrenciesCross(fields[8] + "/" + fields[9]);
@@ -89,8 +91,7 @@ namespace Converter
                         ImpRecord impRecord = new ImpRecord(logger);
 
                         impRecord.setTransactionDate(fields[11]);
-                        // use the dictionary to get the isin code
-                        impRecord.setIdCode(fondCode.getIsin(fields[3]));
+                        
                         if (fields[16].Length > 0 && fields[16][0] == '-')
                         {
                             impRecord.setTransactionType("S"); // Salg
@@ -121,9 +122,20 @@ namespace Converter
 
                         impRecord.setCurrenciesCross(fields[9], fields[10]);
 
-                        ks++;
-                        numberOfSupoerPortRecords++;
-                        impRecord.writeKoebSalgAktier(fileName);
+                        // use the dictionary to get the isin code
+                        string idCode = fondCode.getIsin(fields[3]);
+                        if (idCode.Equals(string.Empty))
+                        {
+                            success = false;
+                            emailBody += "Try to get Isin code " + fields[3] + " but was not found in the fondcode file.\n";
+                        }
+                        else
+                        {
+                            impRecord.setIdCode(idCode);
+                            ks++;
+                            numberOfSupoerPortRecords++;
+                            impRecord.writeKoebSalgAktier(fileName);
+                        }
                     }
                 }
 
