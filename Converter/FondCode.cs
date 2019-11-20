@@ -48,6 +48,7 @@ namespace Converter
             if (!dict.TryGetValue(key.Trim(), out value))
             {
                 logger.Write("Try to get Isin code for " + key + " but it was not found in the file " + filePath);
+                return string.Empty;
             }
 
             return value;
