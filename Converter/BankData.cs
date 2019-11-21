@@ -64,7 +64,8 @@ namespace Converter
                         impRecord.blankAmount();
                         impRecord.blankKurtage();
 
-                        impRecord.setCost("-" + fields[16]);
+                        Decimal cost = Convert.ToDecimal(fields[16], cultureInfo);
+                        impRecord.setCost("-" + Math.Round(cost / currencyRate * 100, 2).ToString());
 
                         impRecord.setStatus('N');
 
