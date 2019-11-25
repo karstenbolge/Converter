@@ -75,12 +75,18 @@ namespace Converter
                             // impRecord.setTransactionNumber(splitTransactioNumber(fields[16])); use SuperPorts
                             impRecord.setAmount(fields[17]);
                             impRecord.setExchangeRate(fields[18]);
-                            impRecord.setKurtage("-" + fields[21]);
+                            CultureInfo cultureInfo = new CultureInfo("en-US");
+                            Decimal currencyRate = Convert.ToDecimal(fields[23], cultureInfo);
+                            Decimal kurtage = Convert.ToDecimal(fields[21], cultureInfo);
+                            Decimal cost = Convert.ToDecimal(fields[22], cultureInfo);
+                            impRecord.setKurtage("-" + Math.Round(cost + kurtage / currencyRate * 100, 2).ToString());
+                            //impRecord.setKurtage("-" + fields[21]);
                             impRecord.setCurrenciesCross(fields[53], fields[55]);
                             impRecord.setCurrenciesRate(fields[23]);
+                            impRecord.setInterest(fields[24]);
                             // take last 14 digits
                             impRecord.setAccountNumber(fields[30], false, 14);
-                            impRecord.setPrice(fields[31]);
+                            //impRecord.setPrice(fields[31]);
                             // take last 14 digits
                             impRecord.setDepotNumber(fields[34], false, 14);
 
