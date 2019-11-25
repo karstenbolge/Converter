@@ -84,6 +84,14 @@ namespace Converter
                             // take last 14 digits
                             impRecord.setDepotNumber(fields[34], false, 14);
 
+                            if (fields[17].Length > 0 && fields[17][0] == '-')
+                            {
+                                impRecord.setTransactionType("S"); // Salg
+                            }
+                            else
+                            {
+                                impRecord.setTransactionType("K"); // Køb
+                            }
                             impRecord.setStatus('N');
                             
                             impRecord.writeKoebSalgObligationer(fileName);
