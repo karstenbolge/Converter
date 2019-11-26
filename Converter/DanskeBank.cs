@@ -99,7 +99,9 @@ namespace Converter
                                 impRecord.setTransactionType("K"); // Køb
                             }
                             impRecord.setStatus('N');
-                            
+                            impRecord.setNota('N');
+                            impRecord.setCounterPart("DB"); // Danske bank 
+
                             impRecord.writeKoebSalgObligationer(fileName);
                         }
                     }
