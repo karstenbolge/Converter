@@ -81,7 +81,7 @@ namespace Converter
                             Decimal cost = Convert.ToDecimal(fields[22], cultureInfo);
                             impRecord.setKurtage("-" + Math.Round(cost + kurtage / currencyRate * 100, 2).ToString());
                             //impRecord.setKurtage("-" + fields[21]);
-                            impRecord.setCurrenciesCross(fields[53], fields[55]);
+                            impRecord.setCurrenciesCross(fields[55], fields[53]);
                             impRecord.setCurrenciesRate(fields[23]);
                             impRecord.setInterest(fields[24]);
                             // take last 14 digits
