@@ -61,7 +61,7 @@ namespace Converter
 
             FondCode fondCode = new FondCode(logger);
 
-            logger.Write("---- Start 1.0.6.0 --------------", true);
+            logger.Write("---- Start 1.0.7.0 --------------", true);
             if (args.Length >= 10)
             {
                 debugLevel = args[9].ToLower() == "true";
