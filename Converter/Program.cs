@@ -111,7 +111,7 @@ namespace Converter
                         else if ((lines[0].IndexOf("\"REC-TYPE\";") == 0) || (lines[0].IndexOf("REC-TYPE;") == 0))
                         {
                             BankData jydskeBank = new BankData(lines, ref fondCode, logger);
-                            numberOfSupoerPortRecords += jydskeBank.Process(ref emailBody, ref debugLevel, ref success, args[1] + "\\" + date);
+                            numberOfSupoerPortRecords += jydskeBank.Process(ref emailBody, ref debugLevel, ref success, args[1] + "\\" + date, banks[i]);
 
                         }
                         else if ((lines[0].IndexOf("HEAD") == 0) && (lines[0][4] == 31))
