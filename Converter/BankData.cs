@@ -25,11 +25,18 @@ namespace Converter
             annuls = new List<string>();
         }
 
-        public int Process(ref string emailBody, ref bool debugLevel, ref bool success, string fileName)
+        public int Process(ref string emailBody, ref bool debugLevel, ref bool success, string fileName, string folder)
         {
             numberOfSupoerPortRecords = 0;
 
             logger.Write("    Jyske Bank format");
+            logger.Write("    Jyske Bank format " + folder);
+
+            string counterPart = "JB";
+            if (folder.ToLower().Contains("sydbank"))
+            {
+                counterPart = "SB";
+            }
 
             if (lines.Length > 1)
             {
@@ -140,7 +147,7 @@ namespace Converter
                         // take last 14 digits
                         impRecord.setDepotNumber(fields[1], false, 14);
                         impRecord.setNota('N');
-                        impRecord.setCounterPart("JB"); // Jydske bank 
+                        impRecord.setCounterPart(counterPart); // Jydske bank 
 
                         impRecord.setStatus('N');
 
