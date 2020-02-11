@@ -41,6 +41,8 @@ namespace Converter
             int kb = 0;
             int dk = 0;
 
+            ImpRecord uBImpRecord = null;
+
             if (lines.Length > 2)
             {
                 for (int k = 1; k < lines.Length - 1; k++)
@@ -63,9 +65,13 @@ namespace Converter
                         }
                         else
                         {
+                            if (fields[20].CompareTo("ORDRE") == 0) continue;
+
+                            impRecord.setTransactionType(fields[10]); // Salg
+
                             impRecord.setDepotNumber(fields[1]);
                             impRecord.setAccountNumber(fields[2]);
-                            impRecord.setIdCode(fields[3]);
+                            impRecord.setIdCode(fields[4]);
                             // impRecord.setTransactionNumber(fields[5]); use SuperPorts
                             impRecord.setTransactionDate(fields[13]);
                             impRecord.setSettlementDate(fields[14]);
@@ -84,11 +90,11 @@ namespace Converter
 
                             if (fields[10] == "S")
                             {
-                                impRecord.setTransactionType("S");
+                                impRecord.setTransactionType("K");
                             }
                             else if (fields[10] == "B")
                             {
-                                impRecord.setTransactionType("K");
+                                impRecord.setTransactionType("S");
                             }
                             else
                             {
@@ -98,8 +104,12 @@ namespace Converter
                             impRecord.setCurrenciesCross(fields[11] + "/" + fields[12]);
                             impRecord.setCurrenciesRate(fields[15]);
                             impRecord.setAmount(fields[16]);
-                            impRecord.setPrice(fields[27]);
+                            impRecord.setPrice(fields[17]);
                             impRecord.setCost(fields[22]);
+                            impRecord.setKurtage("-" + fields[21]);
+
+                            impRecord.setNota('N');
+                            impRecord.setCounterPart("NY"); // Nykredit 
 
                             impRecord.setUnknown("000000737632.00000000000");
 
@@ -110,7 +120,24 @@ namespace Converter
                     else if (lines[k].IndexOf("UB;") == 0)
                     {
                         ub++;
-                        ImpRecord impRecord = new ImpRecord(logger);
+                        //ImpRecord impRecord = new ImpRecord(logger);
+
+                        if (uBImpRecord == null)
+                        {
+                            uBImpRecord = new ImpRecord(logger);
+                        }
+                        else if (uBImpRecord.getDepotNumber().TrimStart().CompareTo(fields[1].TrimEnd()) == 0 &&
+                                  uBImpRecord.getIdCode().TrimStart().CompareTo(fields[23].TrimEnd()) == 0)
+                        {
+                            // handle extra tax record
+                            uBImpRecord.setYieldTax("-" + fields[18]);
+                            continue;
+                        } else { 
+                            numberOfSupoerPortRecords++;
+                            uBImpRecord.writeUdbytteAktier(fileName);
+
+                            uBImpRecord = new ImpRecord(logger);
+                        }
                         
                         if (fields.Length < 23)
                         {
@@ -119,45 +146,43 @@ namespace Converter
                         }
                         else
                         {
-                            impRecord.setDepotNumber(fields[1]);
-                            impRecord.setAccountNumber(fields[2]);
-                            impRecord.setIdCode(fields[3]);
+                            uBImpRecord.setDepotNumber(fields[1]);
+                            uBImpRecord.setAccountNumber(fields[2]);
+                            uBImpRecord.setIdCode(fields[23].TrimEnd());
                             // impRecord.setTransactionNumber(fields[4].Substring(0, fields[4].Length < 8 ? fields[4].Length : 8)); use SuperPorts
                             if (fields[5][0] == 'N' || fields[5][0] == 'A') // NEW // AMENDED
                             {
-                                impRecord.setStatus('N');
+                                uBImpRecord.setStatus('N');
                             }
                             else // CANCELLED
                             {
-                                impRecord.setStatus('D');
+                                uBImpRecord.setStatus('D');
                             }
                             if (fields[7] == "A")
                             {
-                                impRecord.setTransactionType("U");
+                                uBImpRecord.setTransactionType("U");
                             }
                             else if (fields[7] == "K")
                             {
-                                impRecord.setTransactionType("KR");
+                                uBImpRecord.setTransactionType("KR");
                             }
                             else
                             {
                                 logger.Write("      UB unknown transaction type" + fields[10]);
                             }
-                            impRecord.setCurrenciesCross(fields[8] + "/" + fields[9]);
-                            impRecord.setTransactionDate(fields[10]);
-                            impRecord.setSettlementDate(fields[11]);
-                            impRecord.setCurrenciesRate(fields[12]);
-                            impRecord.setAmount(fields[15]);
-                            impRecord.setPrice(fields[21]);
-                            impRecord.setCost(fields[19]);
+                            uBImpRecord.setCurrenciesCross(fields[8] + "/" + fields[9]);
+                            uBImpRecord.setTransactionDate(fields[10]);
+                            uBImpRecord.setSettlementDate(fields[11]);
+                            uBImpRecord.setCurrenciesRate(fields[12]);
+                            //impRecord.setAmount(fields[21]);
+                            uBImpRecord.setPrice(fields[15]);
+                            uBImpRecord.setCost(fields[19]);
 
-                            if (debugLevel)
-                            {
-                                logger.WriteFields(fields);
-                            }
-
-                            numberOfSupoerPortRecords++;
-                            impRecord.writeUdbytteAktier(fileName);
+                            uBImpRecord.setNota('N');
+                            
+                            /*numberOfSupoerPortRecords++;
+                            uBImpRecord.writeUdbytteAktier(fileName);
+                            uBImpRecord = null;*/
                         }
                     }
                     else if (lines[1].IndexOf("UD;") == 0)
@@ -190,6 +215,14 @@ namespace Converter
                         logger.Write("      Ukendt fil format, " + lines[k]);
                     }
                 }
+
+                if (uBImpRecord != null)
+                {
+                    numberOfSupoerPortRecords++;
+                    uBImpRecord.writeUdbytteAktier(fileName);
+                    uBImpRecord = null;
+                }
+
                 if (ks > 0) logger.Write("      Depotbevægelser : " + ks);
                 if (ub > 0) logger.Write("      Udbytte, Aktier og obligationer : " + ub);
                 if (ud > 0) logger.Write("      Udtrukne obligationer : " + ud);
