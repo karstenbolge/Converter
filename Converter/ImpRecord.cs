@@ -315,6 +315,19 @@ namespace Converter
 
         public void setCurrenciesRate(String s)
         {
+            /*try
+            {
+                int i = Int32.Parse(s);
+                if (i == 100)
+                {
+                    currenciesRate.setDecimalNumber(string.Empty);
+                    return;
+                }
+            }
+            catch (FormatException)
+            {
+            }*/
+
             currenciesRate.setDecimalNumber(s);
         }
 
