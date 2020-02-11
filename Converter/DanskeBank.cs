@@ -46,6 +46,8 @@ namespace Converter
             int kntopd = 0;
             int hdlakt = 0;
             int rntobl = 0;
+            int rntknt = 0;
+            int gbrtrn = 0;
 
             if (lines.Length > 2)
             {
@@ -266,16 +268,86 @@ namespace Converter
                             impRecord.writeRenteKuponer(fileName);
                         }
                     }
+                    else if (lines[k].IndexOf("RNTKNT") == 0)
+                    {
+                        rntknt++;
+                        ImpRecord impRecord = new ImpRecord(logger);
+
+                        if (fields.Length < 58)
+                        {
+                            emailBody += Environment.NewLine + "Danske Bank RNTKNT record " + kntopd + " has too few fields";
+                            logger.Write("      Konto opdatering record too few fields");
+                        }
+                        else
+                        {
+                            impRecord.setTransactionDate(fields[11]); // not fields[3] as it has to be the same as settlementdate
+                            impRecord.setSettlementDate(fields[11]);
+                            // impRecord.setTransactionNumber(splitTransactioNumber(fields[16])); use SuperPorts
+                            impRecord.setPrice(fields[17]);
+                            impRecord.setCurrenciesRate(fields[23]);
+                            // take last 14 digits
+                            impRecord.setAccountNumber(fields[30], false, 14);
+                            // take last 14 digits
+                            impRecord.setDepotNumber(fields[34], false, 14);
+                            impRecord.setTransactionType("I");
+                            impRecord.setNota('N');
+                            impRecord.setAmount(fields[17]);
+                            impRecord.blankKurtage();
+
+                            impRecord.setStatus('N');
+
+                            impRecord.setCurrenciesCross(fields[55], fields[53]);
+
+                            numberOfSupoerPortRecords++;
+                            impRecord.writeIndsaetHaev(fileName);
+                        }
+                    }
+                    else if (lines[k].IndexOf("GBRTRN") == 0)
+                    {
+                        gbrtrn++;
+                        ImpRecord impRecord = new ImpRecord(logger);
+
+                        if (fields.Length < 58)
+                        {
+                            emailBody += Environment.NewLine + "Danske Bank GBRTRN record " + kntopd + " has too few fields";
+                            logger.Write("      Konto opdatering record too few fields");
+                        }
+                        else
+                        {
+                            impRecord.setTransactionDate(fields[11]); // not fields[3] as it has to be the same as settlementdate
+                            impRecord.setSettlementDate(fields[11]);
+                            // impRecord.setTransactionNumber(splitTransactioNumber(fields[16])); use SuperPorts
+                            impRecord.setPrice(fields[17]);
+                            impRecord.setCurrenciesRate(fields[23]);
+                            // take last 14 digits
+                            impRecord.setAccountNumber(fields[30], false, 14);
+                            // take last 14 digits
+                            impRecord.setDepotNumber(fields[34], false, 14);
+                            impRecord.setTransactionType("I");
+                            impRecord.setNota('N');
+                            impRecord.setAmount(fields[17]);
+                            impRecord.blankKurtage();
+
+                            impRecord.setStatus('N');
+
+                            impRecord.setCurrenciesCross(fields[55], fields[53]);
+
+                            numberOfSupoerPortRecords++;
+                            impRecord.writeIndsaetHaev(fileName);
+                        }
+                    }
                     else
                     {
                         // success = false; It is ok with unknown danske bank formats
-                        logger.Write("      Ukendt fil format, " + lines[k].Split((char)31)[0]);
+                        logger.Write("      Ukendt record format, " + lines[k].Split((char)31)[0]);
                     }
                 }
                 if (hdlobl > 0) logger.Write("      Handel med obligationer og pantebreve : " + hdlobl);
                 if (udbakt > 0) logger.Write("      Udbytte aktier : " + udbakt);
                 if (hdlakt > 0) logger.Write("      Handel med aktier : " + hdlakt);
                 if (rntobl > 0) logger.Write("      Kupon rente for obligationer og pantebreve : " + rntobl);
+                if (rntknt > 0) logger.Write("      Rente konto : " + rntknt);
+                if (gbrtrn > 0) logger.Write("      Ren-gebyrte konto : " + gbrtrn);
             }
             else
             {
