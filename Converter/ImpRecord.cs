@@ -214,7 +214,7 @@ namespace Converter
         }
 
         public void setDepotNumber(String s, bool removePaddingZero = false, int lastXdigits = 0)
-        {
+        {   
             if (lastXdigits > 0 && s.Length > lastXdigits)
             {
                 s = s.Substring(s.Length - lastXdigits);
@@ -288,6 +288,21 @@ namespace Converter
             if (s.Length > 7)
             {
                 logger.Write("CurrenciesCross : " + s + " too long!");
+            }
+
+            if (s.Length >= 7) { 
+                string s1 = s.Substring(0, 3);
+                string s2 = s.Substring(4, 3);
+
+                if (s1.CompareTo(s2) != 0)
+                {
+                    currenciesCross = s.Substring(0, s.Length > 7 ? 7 : s.Length);
+                }
+                else
+                {
+                    setCurrenciesCross(String.Empty);
+                }
+                return;
             }
 
             currenciesCross = s.Substring(0, s.Length > 7 ? 7 : s.Length);
