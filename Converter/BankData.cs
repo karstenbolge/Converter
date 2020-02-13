@@ -30,7 +30,6 @@ namespace Converter
             numberOfSupoerPortRecords = 0;
 
             logger.Write("    Jyske Bank format");
-            logger.Write("    Jyske Bank format " + folder);
 
             string counterPart = "JB";
             if (folder.ToLower().Contains("sydbank"))
@@ -122,15 +121,8 @@ namespace Converter
                         ImpRecord impRecord = new ImpRecord(logger);
 
                         impRecord.setTransactionDate(fields[11]);
-                        
-                        if (fields[16].Length > 0 && fields[16][0] == '-')
-                        {
-                            impRecord.setTransactionType("S"); // Salg
-                        }
-                        else
-                        {
-                            impRecord.setTransactionType("K"); // Køb
-                        }
+
+                        impRecord.setTransactionType(fields[8]);
                         impRecord.setSettlementDate(fields[12]);
                         // impRecord.setTransactionNumber(fields[4]); use SuperPorts
                         impRecord.setAmount(fields[14]);
