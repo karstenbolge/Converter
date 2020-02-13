@@ -18,11 +18,17 @@ namespace Converter
             logger = l;
         }
 
-        public int Process(ref string emailBody, ref bool debugLevel, ref bool success, string fileName)
+        public int Process(ref string emailBody, ref bool debugLevel, ref bool success, string fileName, string folder)
         {
             numberOfSupoerPortRecords = 0;
 
             logger.Write("    Nykrdit format");
+
+            string counterPart = "NY";
+            if (folder.ToLower().Contains("handelsbanken"))
+            {
+                counterPart = "HA";
+            }
 
             // Removing qoutes
             if (lines[0].IndexOf("\"") == 0)
@@ -71,7 +77,7 @@ namespace Converter
 
                             impRecord.setDepotNumber(fields[1]);
                             impRecord.setAccountNumber(fields[2]);
-                            impRecord.setIdCode(fields[4]);
+                            impRecord.setIdCode(fields[23].TrimEnd());
                             // impRecord.setTransactionNumber(fields[5]); use SuperPorts
                             impRecord.setTransactionDate(fields[13]);
                             impRecord.setSettlementDate(fields[14]);
@@ -109,7 +115,7 @@ namespace Converter
                             impRecord.setKurtage("-" + fields[21]);
 
                             impRecord.setNota('N');
-                            impRecord.setCounterPart("NY"); // Nykredit 
+                            impRecord.setCounterPart(counterPart); // Nykredit 
 
                             impRecord.setUnknown("000000737632.00000000000");
 
@@ -171,7 +177,7 @@ namespace Converter
                                 logger.Write("      UB unknown transaction type" + fields[10]);
                             }
                             uBImpRecord.setCurrenciesCross(fields[8] + "/" + fields[9]);
-                            uBImpRecord.setTransactionDate(fields[10]);
+                            uBImpRecord.setTransactionDate(fields[11]); // has to be same as valør dato!
                             uBImpRecord.setSettlementDate(fields[11]);
                             uBImpRecord.setCurrenciesRate(fields[12]);
                             //impRecord.setAmount(fields[21]);
