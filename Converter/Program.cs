@@ -106,7 +106,7 @@ namespace Converter
                         if (lines[0].IndexOf("HEAD;") == 0 || lines[0].IndexOf("\"HEAD;") == 0)
                         {
                             Nykredit nykredit  = new Nykredit(lines, logger);
-                            numberOfSupoerPortRecords += nykredit.Process(ref emailBody, ref debugLevel, ref success, args[1] + "\\" + date);
+                            numberOfSupoerPortRecords += nykredit.Process(ref emailBody, ref debugLevel, ref success, args[1] + "\\" + date, banks[i]);
                         }
                         else if ((lines[0].IndexOf("\"REC-TYPE\";") == 0) || (lines[0].IndexOf("REC-TYPE;") == 0))
                         {
