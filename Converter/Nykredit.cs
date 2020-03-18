@@ -77,7 +77,7 @@ namespace Converter
 
                             impRecord.setDepotNumber(fields[1]);
                             impRecord.setAccountNumber(fields[2]);
-                            impRecord.setIdCode(fields[23].TrimEnd());
+                            impRecord.setIdCode(fields[4].TrimEnd());
                             // impRecord.setTransactionNumber(fields[5]); use SuperPorts
                             impRecord.setTransactionDate(fields[13]);
                             impRecord.setSettlementDate(fields[14]);
