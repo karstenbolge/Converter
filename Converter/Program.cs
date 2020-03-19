@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Reflection;
 
 namespace Converter
 {
@@ -61,7 +62,7 @@ namespace Converter
 
             FondCode fondCode = new FondCode(logger);
 
-            logger.Write("---- Start 1.0.9.0 --------------", true);
+            logger.Write("---- Start " + Assembly.GetCallingAssembly().GetName().Version +  " --------------", true);
             if (args.Length >= 10)
             {
                 debugLevel = args[9].ToLower() == "true";
