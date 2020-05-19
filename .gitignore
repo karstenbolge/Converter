@@ -1,1 +1,10 @@
 Converter/obj/*
+Converter/bin/Debug/*
+Converter/bin/Release/Converter.exe
+Converter/bin/Release/Converter.exe.config
+Converter/bin/Release/Converter.pdb
+Converter/bin/Release/Converter.vshost.exe
+Converter/bin/Release/Converter.vshost.exe.config
+Converter/bin/Release/Converter.vshost.exe.manifest
+.vs/*
+
