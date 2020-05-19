@@ -7,4 +7,5 @@ Converter/bin/Release/Converter.vshost.exe
 Converter/bin/Release/Converter.vshost.exe.config
 Converter/bin/Release/Converter.vshost.exe.manifest
 .vs/*
-
+ConverterTests/bin/*
+ConverterTests/obj/*
