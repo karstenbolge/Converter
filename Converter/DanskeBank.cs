@@ -222,6 +222,7 @@ namespace Converter
                             impRecord.setNota('N');
                             impRecord.setCounterPart("DB"); // Danske bank 
 
+
                             impRecord.setStatus('N');
 
                             impRecord.setCurrenciesCross(fields[55], fields[53]);
