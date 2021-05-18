@@ -276,7 +276,7 @@ namespace Converter
 
                         if (fields.Length < 58)
                         {
-                            emailBody += Environment.NewLine + "Danske Bank RNTKNT record " + kntopd + " has too few fields";
+                            emailBody += Environment.NewLine + "Danske Bank RNTKNT record " + rntknt + " has too few fields";
                             logger.Write("      Konto opdatering record too few fields");
                         }
                         else
@@ -310,7 +310,7 @@ namespace Converter
 
                         if (fields.Length < 58)
                         {
-                            emailBody += Environment.NewLine + "Danske Bank GBRTRN record " + kntopd + " has too few fields";
+                            emailBody += Environment.NewLine + "Danske Bank GBRTRN record " + gbrtrn + " has too few fields";
                             logger.Write("      Konto opdatering record too few fields");
                         }
                         else
@@ -349,6 +349,7 @@ namespace Converter
                 if (rntobl > 0) logger.Write("      Kupon rente for obligationer og pantebreve : " + rntobl);
                 if (rntknt > 0) logger.Write("      Rente konto : " + rntknt);
                 if (gbrtrn > 0) logger.Write("      Ren-gebyrte konto : " + gbrtrn);
+                if (kntopd > 0) logger.Write("      Konto opdatering : " + kntopd);
             }
             else
             {
