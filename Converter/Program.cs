@@ -120,7 +120,13 @@ namespace Converter
                             DanskeBank danskeBank = new DanskeBank(lines, logger);
                             numberOfSupoerPortRecords += danskeBank.Process(ref emailBody, ref debugLevel, ref success, args[1] + "\\" + date);
                         }
-                        else
+                        else if ((lines[0].IndexOf("UDBAKT") == 0) || (lines[0][10] == 31))
+                        {
+                            Nordea nordea = new Nordea(lines, logger);
+                            numberOfSupoerPortRecords += nordea.Process(ref emailBody, ref debugLevel, ref success, args[1] + "\\" + date);
+
+                        }
+                        else 
                         {
                             success = false;
                             logger.Write("      Ukendt fil format");
