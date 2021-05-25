@@ -26,8 +26,6 @@ namespace Converter
                 for (int i = 1; i < lines.Length; i++)
                 {
                     string[] fields = lines[i].Split(';');
-                    logger.Write("fields[1] " + fields[1]);
-                    logger.Write("fields[2] " + fields[2]);
                     if (fields.Length > 1 && fields[2].Length > 0)
                     {
                         dict.Add(fields[2], fields[1]);
