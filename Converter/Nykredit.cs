@@ -111,7 +111,7 @@ namespace Converter
                             impRecord.setCurrenciesRate(fields[15]);
                             impRecord.setAmount(fields[16]);
                             impRecord.setPrice(fields[17]);
-                            impRecord.setCost(fields[22]);
+                            impRecord.setCost("-" + fields[22]);
                             impRecord.setKurtage("-" + fields[21]);
 
                             impRecord.setNota('N');
@@ -135,8 +135,17 @@ namespace Converter
                         else if (uBImpRecord.getDepotNumber().TrimStart().CompareTo(fields[1].TrimEnd()) == 0 &&
                                   uBImpRecord.getIdCode().TrimStart().CompareTo(fields[23].TrimEnd()) == 0)
                         {
-                            // handle extra tax record, only the first
+                            // handle extra tax record
+                            DecimalNumber yeildTax = new DecimalNumber(12, 7, true, logger);
+                            yeildTax.setDecimalNumber("-" + fields[18]);
+
+                            // set if not set
                             if (!uBImpRecord.yieldTaxSet()) uBImpRecord.setYieldTax("-" + fields[18]);
+                            else
+                            {
+                                // set if bigger than value
+                                if (uBImpRecord.getYieldTax().CompareTo(yeildTax.getDecimalNumber()) < 0) uBImpRecord.setYieldTax("-" + fields[18]);
+                            }
 
                             continue;
                         } else { 
