@@ -67,7 +67,7 @@ namespace Converter
             NordeaDepot nordeaDepot = new NordeaDepot(logger);
 
             logger.Write("---- Start " + Assembly.GetCallingAssembly().GetName().Version +  " --------------", true);
-            if (args.Length >= 10)
+            if (args.Length >= 11)
             {
                 debugLevel = args[10].ToLower() == "true";
                 if (debugLevel)
