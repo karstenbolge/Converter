@@ -343,7 +343,7 @@ namespace Converter
 
         public bool yieldTaxSet()
         {
-            return yeildTax.notSet();
+            return !yeildTax.notSet();
         }
 
         public String getYieldTax()
