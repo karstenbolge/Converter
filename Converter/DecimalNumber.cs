@@ -36,6 +36,11 @@ namespace Converter
             isBlank = true;
         }
 
+        public bool notSet()
+        {
+            return pre == string.Empty && post == string.Empty;
+        }
+
         public void setDecimalNumber(String s)
         {
             pre = string.Empty;
