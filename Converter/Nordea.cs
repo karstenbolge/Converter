@@ -96,7 +96,7 @@ namespace Converter
                                 acc = acc.TrimStart('0');
                                 emailBody += "Try to get Nordea Depot code for account " + acc + " but was not found in the Nordea depot file.\n";
                             }
-                            impRecord.setDepotNumber(depot, false, 14);
+                            impRecord.setDepotNumber("0000000000" + depot, false, 10);
 
                             impRecord.setTransactionType("U");
                             impRecord.setNota('N');
@@ -109,6 +109,70 @@ namespace Converter
 
                             numberOfSupoerPortRecords++;
                             impRecord.writeUdbytteAktier(fileName);
+                        }
+                    }
+                    else if (lines[k].IndexOf("HDLAKT") == 0)
+                    {
+                        hdlakt++;
+                        ImpRecord impRecord = new ImpRecord(logger);
+
+                        if (fields.Length < 58)
+                        {
+                            emailBody += Environment.NewLine + "Nordea HDLAKT record " + hdlakt + " has too few fields";
+                            logger.Write("      Handel med aktier record too few fields");
+                        }
+                        else
+                        {
+                            impRecord.setTransactionDate(fields[3]);
+                            impRecord.setIdCode(fields[4]);
+                            if (fields[17].Length > 0 && fields[17][0] == '-')
+                            {
+                                impRecord.setTransactionType("S"); // Salg
+                            }
+                            else
+                            {
+                                impRecord.setTransactionType("K"); // Køb
+                            }
+
+                            impRecord.setSettlementDate(fields[11]);
+                            // impRecord.setTransactionNumber(splitTransactioNumber(fields[16])); use SuperPorts
+                            impRecord.setAmount(fields[17]);
+                            impRecord.setExchangeRate(fields[18]);
+
+                            CultureInfo cultureInfo = new CultureInfo("en-US");
+                            Decimal currencyRate = Convert.ToDecimal(fields[56], cultureInfo);
+                            Decimal kurtage = Convert.ToDecimal(fields[21], cultureInfo);
+                            Decimal cost = Convert.ToDecimal(fields[20], cultureInfo);
+                            impRecord.setKurtage("-" + Math.Round(cost + kurtage / currencyRate * 100, 2).ToString());
+
+                            //impRecord.setKurtage("-" + fields[21]);
+                            impRecord.setCurrenciesRate(fields[56]);
+                            impRecord.setYieldTax("-" + fields[24]);
+                            // take last 14 digits
+                            impRecord.setAccountNumber(fields[30], false, 10);
+                            // take last 14 digits
+
+                            string depot = nordeaDepot.getDepot(impRecord.getAccountNumber());
+                            if (depot.Equals(string.Empty))
+                            {
+                                success = false;
+                                string acc = fields[30];
+                                acc = acc.Trim();
+                                acc = acc.TrimStart('0');
+                                emailBody += "Try to get Nordea Depot code for account " + acc + " but was not found in the Nordea depot file.\n";
+                            }
+                            impRecord.setDepotNumber("0000000000" + depot, false, 10);
+
+                            impRecord.setNota('N');
+                            impRecord.setCounterPart("NO"); // Nordea
+
+
+                            impRecord.setStatus('N');
+
+                            impRecord.setCurrenciesCross(fields[55], fields[53]);
+
+                            numberOfSupoerPortRecords++;
+                            impRecord.writeKoebSalgAktier(fileName);
                         }
                     }
                     else if (lines[k].Length > 12 && lines[k][10] == 31 && lines[k][11] == 31)
