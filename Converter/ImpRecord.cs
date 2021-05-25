@@ -341,6 +341,11 @@ namespace Converter
             yeildTax.setDecimalNumber(s);
         }
 
+        public bool yieldTaxSet()
+        {
+            return yeildTax.notSet();
+        }
+
         public String getYieldTax()
         {
             return yeildTax.getDecimalNumber();
