@@ -135,8 +135,9 @@ namespace Converter
                         else if (uBImpRecord.getDepotNumber().TrimStart().CompareTo(fields[1].TrimEnd()) == 0 &&
                                   uBImpRecord.getIdCode().TrimStart().CompareTo(fields[23].TrimEnd()) == 0)
                         {
-                            // handle extra tax record
-                            uBImpRecord.setYieldTax("-" + fields[18]);
+                            // handle extra tax record, only the first
+                            if (!uBImpRecord.yieldTaxSet()) uBImpRecord.setYieldTax("-" + fields[18]);
+
                             continue;
                         } else { 
                             numberOfSupoerPortRecords++;
