@@ -4,15 +4,17 @@ using System.Globalization;
 // Beware danske bank is using decimal point, hence culrura varial en-US
 namespace Converter
 {
-    public class Nordea
+    class Nordea
     {
         static Logger logger;
         String[] lines;
+        NordeaDepot nordeaDepot;
         int numberOfSupoerPortRecords;
 
-        public Nordea(String [] lines, Logger l)
+        public Nordea(String [] lines, ref NordeaDepot nordeaDepot, Logger l)
         {
             this.lines = lines;
+            this.nordeaDepot = nordeaDepot;
             logger = l;
         }
 
@@ -79,12 +81,22 @@ namespace Converter
                             // yeield tax should be decucted - hence negativ and the dash infront of the field
                             impRecord.setYieldTax("-" + fields[24]);
                             // take last 14 digits
-                            impRecord.setAccountNumber(fields[30], false, 14);
+                            impRecord.setAccountNumber(fields[30], false, 10);
 
                             impRecord.setCurrenciesRate(fields[56]);
 
                             // take last 14 digits
-                            impRecord.setDepotNumber(fields[34], false, 14);
+                            // impRecord.setDepotNumber(fields[34], false, 14);
+                            string depot = nordeaDepot.getDepot(impRecord.getAccountNumber());
+                            if (depot.Equals(string.Empty))
+                            {
+                                success = false;
+                                string acc = fields[30];
+                                acc = acc.Trim();
+                                acc = acc.TrimStart('0');
+                                emailBody += "Try to get Nordea Depot code for account " + acc + " but was not found in the Nordea depot file.\n";
+                            }
+                            impRecord.setDepotNumber(depot, false, 14);
 
                             impRecord.setTransactionType("U");
                             impRecord.setNota('N');
