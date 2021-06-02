@@ -111,6 +111,40 @@ namespace Converter
                             impRecord.writeUdbytteAktier(fileName);
                         }
                     }
+                    else if (lines[k].IndexOf("KNTOPD") == 0)
+                    {
+                        kntopd++;
+                        ImpRecord impRecord = new ImpRecord(logger);
+
+                        if (fields.Length < 58)
+                        {
+                            emailBody += Environment.NewLine + "Nordea KNTOPD record " + kntopd + " has too few fields";
+                            logger.Write("      Konto opdatering record too few fields");
+                        }
+                        else
+                        {
+                            impRecord.setTransactionDate(fields[11]); // not fields[3] as it has to be the same as settlementdate
+                            impRecord.setSettlementDate(fields[11]);
+                            // impRecord.setTransactionNumber(splitTransactioNumber(fields[16])); use SuperPorts
+                            impRecord.setPrice(fields[17]);
+                            impRecord.setCurrenciesRate(fields[23]);
+                            // take last 14 digits
+                            impRecord.setAccountNumber(fields[30], false, 14);
+                            // take last 14 digits
+                            impRecord.setDepotNumber(fields[34], false, 14);
+                            impRecord.setTransactionType("I");
+                            impRecord.setNota('N');
+                            impRecord.setAmount(fields[17]);
+                            impRecord.blankKurtage();
+
+                            impRecord.setStatus('N');
+
+                            impRecord.setCurrenciesCross(fields[55], fields[53]);
+
+                            numberOfSupoerPortRecords++;
+                            impRecord.writeIndsaetHaev(fileName);
+                        }
+                    }
                     else if (lines[k].IndexOf("HDLAKT") == 0)
                     {
                         hdlakt++;
