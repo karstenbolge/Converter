@@ -129,7 +129,7 @@ namespace Converter
                             impRecord.setPrice(fields[17]);
                             impRecord.setCurrenciesRate(fields[23]);
                             // take last 14 digits
-                            impRecord.setAccountNumber(fields[30], false, 14);
+                            impRecord.setAccountNumber(fields[30], false, 10);
                             // take last 14 digits
                             impRecord.setDepotNumber(fields[34], false, 14);
                             impRecord.setTransactionType("I");
