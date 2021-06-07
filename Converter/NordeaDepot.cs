@@ -26,9 +26,9 @@ namespace Converter
                 for (int i = 1; i < lines.Length; i++)
                 {
                     string[] fields = lines[i].Split(';');
-                    if (fields.Length > 1 && fields[2].Length > 0)
+                    if (fields.Length > 1 && fields[3].Length > 0)
                     {
-                        dict.Add(fields[2], fields[1]);
+                        dict.Add(fields[3], fields[1]);
                     }
                 }
             }
