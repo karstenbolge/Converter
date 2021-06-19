@@ -130,7 +130,7 @@ namespace Converter
                             DanskeBank danskeBank = new DanskeBank(lines, logger);
                             numberOfSupoerPortRecords += danskeBank.Process(ref emailBody, ref debugLevel, ref success, args[1] + "\\" + date);
                         }
-                        else if ((lines[0].IndexOf("UDBAKT") == 0) || (lines[0].IndexOf("HDLAKT") == 0) || (lines[0].IndexOf("KNTOPD") == 0) || (lines[0][10] == 31))
+                        else if ((lines[0].IndexOf("UDBAKT") == 0) || (lines[0].IndexOf("HDLAKT") == 0) || (lines[0].IndexOf("KNTOPD") == 0) || (lines[0].IndexOf("GBRTRN") == 0) || (lines[0][10] == 31))
                         {
                             Nordea nordea = new Nordea(lines, ref nordeaDepot, logger);
                             numberOfSupoerPortRecords += nordea.Process(ref emailBody, ref debugLevel, ref success, args[1] + "\\" + date);
