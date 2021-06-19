@@ -209,6 +209,51 @@ namespace Converter
                             impRecord.writeKoebSalgAktier(fileName);
                         }
                     }
+                    else if (lines[k].IndexOf("GBRTRN") == 0)
+                    {
+                        gbrtrn++;
+                        ImpRecord impRecord = new ImpRecord(logger);
+
+                        if (fields.Length < 58)
+                        {
+                            emailBody += Environment.NewLine + "Nordea GBRTRN record " + gbrtrn + " has too few fields";
+                            logger.Write("      Konto opdatering record too few fields");
+                        }
+                        else
+                        {
+                            impRecord.setTransactionDate(fields[11]); // not fields[3] as it has to be the same as settlementdate
+                            impRecord.setSettlementDate(fields[11]);
+                            // impRecord.setTransactionNumber(splitTransactioNumber(fields[16])); use SuperPorts
+                            impRecord.setPrice(fields[17]);
+                            impRecord.setCurrenciesRate(fields[23]);
+                            // take last 10 digits
+                            impRecord.setAccountNumber(fields[30], false, 10);
+                            
+                            /* depot not used for gebyr
+                            string depot = nordeaDepot.getDepot(impRecord.getAccountNumber());
+                            if (depot.Equals(string.Empty))
+                            {
+                                success = false;
+                                string acc = fields[30];
+                                acc = acc.Trim();
+                                acc = acc.TrimStart('0');
+                                emailBody += "Try to get Nordea Depot code for account " + acc + " but was not found in the Nordea depot file.\n";
+                            }
+                            impRecord.setDepotNumber("0000000000" + depot, false, 10);*/
+
+                            impRecord.setTransactionType("I");
+                            impRecord.setNota('N');
+                            impRecord.setAmount(fields[17]);
+                            impRecord.blankKurtage();
+
+                            impRecord.setStatus('N');
+
+                            impRecord.setCurrenciesCross(fields[55], fields[53]);
+
+                            numberOfSupoerPortRecords++;
+                            impRecord.writeIndsaetHaev(fileName);
+                        }
+                    }
                     else if (lines[k].Length > 12 && lines[k][10] == 31 && lines[k][11] == 31)
                     {
                         behold++;
@@ -250,7 +295,7 @@ namespace Converter
                 if (hdlakt > 0) logger.Write("      Handel med aktier : " + hdlakt);
                 if (rntobl > 0) logger.Write("      Kupon rente for obligationer og pantebreve : " + rntobl);
                 if (rntknt > 0) logger.Write("      Rente konto : " + rntknt);
-                if (gbrtrn > 0) logger.Write("      Ren-gebyrte konto : " + gbrtrn);
+                if (gbrtrn > 0) logger.Write("      Gebyr konto : " + gbrtrn);
                 if (kntopd > 0) logger.Write("      Konto opdatering : " + kntopd);
                 if (behold > 0) logger.Write("      Konto beholdning : " + behold);
             }
