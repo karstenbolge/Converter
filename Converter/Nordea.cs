@@ -9,13 +9,15 @@ namespace Converter
         static Logger logger;
         String[] lines;
         NordeaDepot nordeaDepot;
+        NordeaOldRecords nordeaOldRecords;
         int numberOfSupoerPortRecords;
 
-        public Nordea(String [] lines, ref NordeaDepot nordeaDepot, Logger l)
+        public Nordea(String [] lines, ref NordeaDepot nordeaDepot, NordeaOldRecords nordeaOldRecords, Logger l)
         {
             this.lines = lines;
             this.nordeaDepot = nordeaDepot;
             logger = l;
+            this.nordeaOldRecords = nordeaOldRecords;
         }
 
         public String splitTransactioNumber(String t)
@@ -61,6 +63,16 @@ namespace Converter
                     {
                         logger.WriteFields(fields);
                     }
+
+                    // skip previous records
+                    if (nordeaOldRecords.previousRecord(lines[k]))
+                    {
+                        logger.Write("      Denne record er allerede bogført");
+                        continue;
+                    }
+
+                    // write this to the file of previous records
+                    nordeaOldRecords.addRecord(lines[k]);
 
                     if (lines[k].IndexOf("UDBAKT") == 0)
                     {
