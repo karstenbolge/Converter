@@ -21,6 +21,16 @@ namespace Converter
             logger = l;
         }
 
+        public Int16 getMonth()
+        {
+            return month;
+        }
+
+        public Int16 getYear()
+        {
+            return year;
+        }
+
         public void setDate(String s)
         {
             if (s.Length < 6)
