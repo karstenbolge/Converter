@@ -12,6 +12,14 @@ namespace Converter
         NordeaOldRecords nordeaOldRecords;
         int numberOfSupoerPortRecords;
 
+        public Nordea(String[] lines, ref NordeaDepot nordeaDepot, Logger l)
+        {
+            this.lines = lines;
+            this.nordeaDepot = nordeaDepot;
+            logger = l;
+            this.nordeaOldRecords = null;
+        }
+
         public Nordea(String [] lines, ref NordeaDepot nordeaDepot, NordeaOldRecords nordeaOldRecords, Logger l)
         {
             this.lines = lines;
@@ -65,14 +73,14 @@ namespace Converter
                     }
 
                     // skip previous records
-                    if (nordeaOldRecords.previousRecord(lines[k]))
+                    if (nordeaOldRecords != null && nordeaOldRecords.previousRecord(lines[k]))
                     {
                         logger.Write("      Denne record er allerede bogført");
                         continue;
                     }
 
                     // write this to the file of previous records
-                    nordeaOldRecords.addRecord(lines[k]);
+                    if (nordeaOldRecords != null) nordeaOldRecords.addRecord(lines[k]);
 
                     if (lines[k].IndexOf("UDBAKT") == 0)
                     {

@@ -30,6 +30,11 @@ namespace Converter
                 counterPart = "HA";
             }
 
+            if (folder.ToLower().Contains("sparnord"))
+            {
+                counterPart = "SN";
+            }
+
             // Removing qoutes
             if (lines[0].IndexOf("\"") == 0)
             {

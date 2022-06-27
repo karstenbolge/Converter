@@ -88,11 +88,13 @@ namespace Converter
                 Environment.Exit(3);
             }
 
+            /* nordea old records are currently not used 
             string folder = args[9].Substring(0, args[9].LastIndexOf('\\'));
             logger.Write("Old nordea records folder : " + folder);
 
             NordeaOldRecords nordeaOldRecords = new NordeaOldRecords(folder, logger);
             nordeaOldRecords.readFile();
+            */
 
             logger.Write("Output directory : " + args[1] + "\\" + date);
 
@@ -138,7 +140,8 @@ namespace Converter
                         }
                         else if ((lines[0].IndexOf("UDBAKT") == 0) || (lines[0].IndexOf("HDLAKT") == 0) || (lines[0].IndexOf("KNTOPD") == 0) || (lines[0].IndexOf("GBRTRN") == 0) || (lines[0][10] == 31))
                         {
-                            Nordea nordea = new Nordea(lines, ref nordeaDepot, nordeaOldRecords, logger);
+                            Nordea nordea = new Nordea(lines, ref nordeaDepot, logger);
+                            /* Nordea nordea = new Nordea(lines, ref nordeaDepot, nordeaOldRecords, logger); */
                             numberOfSupoerPortRecords += nordea.Process(ref emailBody, ref debugLevel, ref success, args[1] + "\\" + date);
 
                         }
@@ -157,7 +160,7 @@ namespace Converter
                 }
             }
 
-            nordeaOldRecords.writeFile();
+            /* nordeaOldRecords.writeFile(); */
 
             if (numberOfSupoerPortRecords == 0)
             {
